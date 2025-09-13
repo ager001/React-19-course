@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Midenga's Chatbot</title>
+</head>
+
+<body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+        function ChatInput() {
+            return (
+                <>
+                    <input placeholder="Send a message to chatbot" size="30" />
+                    <button>Send</button>
+                </>
+            );
+        }
+
+        function ChatMessage(Message, sender) {
+            
+           // const{Message, sender} = props;
+
+            if (sender === "robot") {
+                return (
+                    <div>
+                        <img src="robot.png" width='50' />
+                        {Message}
+                    </div>
+                );
+            }
+
+
+            return (
+                
+            
+            
+            <div>
+                    {Message}
+                    <img src="user.png" width='50' />
+                </div>
+            );
+        }
+
+
+        const App = (
+            <>
+                <h1>Midenga's Chatbot</h1>
+                <ChatInput />
+                <ChatMessage Message="Hello  Midenga's Chatbot" sender="user" />
+                <ChatMessage Message="Hello! How can I help you?" sender="robot" />
+                <ChatMessage Message="What is React?" sender="user" />
+                <ChatMessage Message="React is a JavaScript library for building user interfaces." sender="robot" />
+                <ChatMessage Message="Who developed React?" sender="user" />
+                <ChatMessage Message="React was developed by Facebook." sender="robot" />
+                <ChatMessage Message="What are the key features of React?" sender="user" />
+                <ChatMessage Message="Some key features of React include component-based architecture, virtual DOM, and unidirectional data flow." sender="robot" />
+                <ChatMessage Message="How does React work?" sender="user" />
+                <ChatMessage Message="React creates a virtual DOM and efficiently updates the real DOM when changes occur." sender="robot" />
+                <ChatMessage Message="What is JSX?" sender="user" />
+                <ChatMessage Message="JSX is a syntax extension for JavaScript that allows you
+    to write HTML-like code within JavaScript." sender="robot" />
+                <ChatMessage Message="How do I get started with React?" sender="user" />
+                <ChatMessage Message="To get started with React, you can use Create React App or include React via a CDN in your HTML file." sender="robot" />
+                <ChatMessage Message="What are components in React?" sender="user" />
+                <ChatMessage Message="Components are reusable building blocks in React that define how a part of the UI should appear and behave." sender="robot" />
+                <ChatMessage Message="What is state in React?" sender="user" />
+                <ChatMessage Message="State is an object that holds data that may change over time and affects how the component renders." sender="robot" />
+                <ChatMessage Message="What are props in React?" sender="user" />
+                <ChatMessage Message="Props (short for properties) are read-only attributes passed from a parent component to a child component." sender="robot" />
+                <ChatMessage Message="How do I handle events in React?" sender="user" />
+                <ChatMessage Message="You can handle events in React by defining event handler functions and attaching them to elements using JSX syntax." sender="robot" />
+                <ChatMessage Message="What is the virtual DOM?" sender="user" />
+                <ChatMessage Message="The virtual DOM is a lightweight representation of the real DOM that allows React to efficiently update and render changes." sender="robot" />
+                <ChatMessage Message="How do I style components in React?" sender="user" />
+                <ChatMessage Message="You can style components in React using inline styles, CSS classes, or CSS-in-JS libraries like styled-components." sender="robot" />
+                <ChatMessage Message="What is the difference between class components and functional components?" sender="user" />
+                <ChatMessage Message="Class components are ES6 classes that extend React.Component, while functional components are simple JavaScript functions. Functional components can use hooks to manage state and lifecycle methods." sender="robot" />
+                <ChatMessage Message="What are hooks in React?" sender="user" />
+                <ChatMessage Message="Hooks are special functions that allow you to use state and other React features in functional components." sender="robot" />
+                <ChatMessage Message="How do I fetch data in a React component?" sender="user" />
+                <ChatMessage Message="You can fetch data in a React component using the useEffect hook for functional components or lifecycle methods like componentDidMount for class components." sender="robot" />
+                <ChatMessage Message="What is context in React?" sender="user" />
+                <ChatMessage Message="Context is a way to pass data through the component tree without having to pass props down manually at every level" sender="robot" />
+            </>
+        );
+
+        const container = document.querySelector('.js-container');
+        ReactDOM.createRoot(container).render(App);
+    </script>
+</body>
+
+</html>
