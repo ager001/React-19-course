@@ -1,105 +1,144 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Midenga's Chatbot</title>
+    
 </head>
-
 <body>
     <div class="js-container"></div>
 
     <script src="https://unpkg.com/supersimpledev/react.js"></script>
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
-
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
     <script type="text/babel">
-        function ChatInput() {
+        function ChatInput({ chatMessages, setChatMessages }) {
+            const [inputText, setInputText] = React.useState('');
+
+            function saveInputText(event) {
+                setInputText(event.target.value);
+            }
+
+            function sendMessage() {
+                if (inputText.trim() === '') return; // Prevent empty messages
+
+                // Add user message to chat
+                const newChatMessages = [
+                    ...chatMessages,
+                    {
+                        message: inputText,
+                        sender: 'user',
+                        id: crypto.randomUUID()
+                    }
+                ];
+
+                // Get chatbot response
+                const response = chatbot.getResponse(inputText);
+
+                // Add chatbot response to chat
+                setChatMessages([
+                    ...newChatMessages,
+                    {
+                        message: response,
+                        sender: 'robot',
+                        id: crypto.randomUUID()
+                    }
+                ]);
+
+                setInputText(''); // Clear input after sending
+            }
+
+            function handleKeyDown(event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            }
+
             return (
-                <>
-                    <input placeholder="Send a message to chatbot" size="30" />
-                    <button>Send</button>
-                </>
+                <div className="chat-input">
+                    <input
+                        placeholder="Send a message to chatbot"
+                        size="30"
+                        value={inputText}
+                        onChange={saveInputText}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <button onClick={sendMessage}>Send</button>
+                </div>
             );
         }
 
-        function ChatMessage(props) {
-            const { Message, sender } = props;
+        function ChatMessage({ message, sender }) {
             return (
-                <div>
+                <div className={`chat-message ${sender}`}>
                     {sender === "robot" && <img src="robot.png" width='50' />}
-                    {Message}
+                    {message}
                     {sender === "user" && <img src="user.png" width='50' />}
                 </div>
             );
         }
 
-
-        function ChatMessages () {
-                  const chatMessages = [
-                { message: 'Hello  Midenga Chatbot', sender: 'user', id: 1 },
-                { message: 'Hello! How can I help you?', sender: 'robot', id: 2 },
-                { message: 'What is React?', sender: 'user', id: 3 },
-                { message: 'React is a JavaScript library for building user interfaces.', sender: 'robot', id: 4 },
-                { message: 'Who developed React?', sender: 'user', id: 5 },
-                { message: 'React was developed by Facebook.', sender: 'robot', id: 6 },
-                { message: 'What are the key features of React?', sender: 'user', id: 7 },
-                { message: 'Some key features of React include component-based architecture, virtual DOM, and unidirectional data flow.', sender: 'robot', id: 8 },
-                { message: 'How does React work?', sender: 'user', id: 9 },
-                { message: 'React creates a virtual DOM and efficiently updates the real DOM when changes occur.', sender: 'robot', id: 10 },
-                { message: 'What is JSX?', sender: 'user', id: 11 },
-                { message: 'JSX is a syntax extension for JavaScript that allows you to write HTML-like code within JavaScript.', sender: 'robot', id: 12 },
-                { message: 'How do I get started with React?', sender: 'user', id: 13 },
-                { message: 'To get started with React, you can use Create React App or include React via a CDN in your HTML file.', sender: 'robot', id: 14 },
-                { message: 'What are components in React?', sender: 'user', id: 15 },
-                { message: 'Components are reusable building blocks in React that define how a part of the UI should appear and behave.', sender: 'robot', id: 16 },
-                { message: 'What is state in React?', sender: 'user', id: 17 },
-                { message: 'State is an object that holds data that may change over time and affects how the component renders.', sender: 'robot', id: 18 },
-                { message: 'What are props in React?', sender: 'user', id: 19 },
-                { message: 'Props (short for properties) are read-only attributes passed from a parent component to a child component.', sender: 'robot', id: 20 },
-                { message: 'How do I handle events in React?', sender: 'user', id: 21 },
-                { message: 'You can handle events in React by defining event handler functions and attaching them to elements using JSX syntax.', sender: 'robot', id: 22 },
-                { message: 'What is the virtual DOM?', sender: 'user', id: 23 },
-                { message: 'The virtual DOM is a lightweight representation of the real DOM that allows React to efficiently update and render changes.', sender: 'robot', id: 24 },
-                { message: 'How do I style components in React?', sender: 'user', id: 25 },
-                { message: 'You can style components in React using inline styles, CSS classes, or CSS-in-JS libraries like styled-components.', sender: 'robot', id: 26 },
-                { message: 'What is the difference between class components and functional components?', sender: 'user', id: 27 },
-                { message: 'Class components are ES6 classes that extend React.Component, while functional components are simple JavaScript functions. Functional components can use hooks to manage state and lifecycle methods.', sender: 'robot', id: 28 },
-                { message: 'What are hooks in React?', sender: 'user', id: 29 },
-                { message: 'Hooks are special functions that allow you to use state and other React features in functional components.', sender: 'robot', id: 30 },
-                { message: 'How do I fetch data in a React component?', sender: 'user', id: 31 },
-                { message: 'You can fetch data in a React component using the useEffect hook for functional components or lifecycle methods like componentDidMount for class components.', sender: 'robot', id: 32 },
-                { message: 'What is context in React?', sender: 'user', id: 33 },
-                { message: 'Context is a way to pass data through the component tree without having to pass props down manually at every level', sender: 'robot', id: 34 }
-            ];
-
+        function ChatMessages({ chatMessages }) {
             return (
-                <>
-                 {chatMessages.map((chatMessage) => {
-                return (
-                    <ChatMessage
-                        key={chatMessage.id}
-                        Message={chatMessage.message}
-                        sender={chatMessage.sender} />
-                );
-            })}
-                </>
-            )
-            
+                <div className="chat-messages">
+                    {chatMessages.map((chatMessage) => (
+                        <ChatMessage
+                            key={chatMessage.id}
+                            message={chatMessage.message}
+                            sender={chatMessage.sender}
+                        />
+                    ))}
+                </div>
+            );
         }
 
-
-
         function App() {
-        
-         
+            const [chatMessages, setChatMessages] = React.useState([
+                { message: 'Hello Midenga Chatbot', sender: 'user', id: crypto.randomUUID() },
+                { message: 'Hello! How can I help you?', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'What is React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'React is a JavaScript library for building user interfaces.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'Who developed React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'React was developed by Facebook.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'What are the key features of React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'Some key features of React include component-based architecture, virtual DOM, and unidirectional data flow.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'How does React work?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'React creates a virtual DOM and efficiently updates the real DOM when changes occur.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'What is JSX?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'JSX is a syntax extension for JavaScript that allows you to write HTML-like code within JavaScript.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'How do I get started with React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'To get started with React, you can use Create React App or include React via a CDN in your HTML file.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'What are components in React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'Components are reusable building blocks in React that define how a part of the UI should appear and behave.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'What is state in React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'State is an object that holds data that may change over time and affects how the component renders.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'What are props in React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'Props (short for properties) are read-only attributes passed from a parent component to a child component.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'How do I handle events in React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'You can handle events in React by defining event handler functions and attaching them to elements using JSX syntax.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'What is the virtual DOM?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'The virtual DOM is a lightweight representation of the real DOM that allows React to efficiently update and render changes.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'How do I style components in React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'You can style components in React using inline styles, CSS classes, or CSS-in-JS libraries like styled-components.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'What is the difference between class components and functional components?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'Class components are ES6 classes that extend React.Component, while functional components are simple JavaScript functions. Functional components can use hooks to manage state and lifecycle methods.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'What are hooks in React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'Hooks are special functions that allow you to use state and other React features in functional components.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'How do I fetch data in a React component?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'You can fetch data in a React component using the useEffect hook for functional components or lifecycle methods like componentDidMount for class components.', sender: 'robot', id: crypto.randomUUID() },
+                { message: 'What is context in React?', sender: 'user', id: crypto.randomUUID() },
+                { message: 'Context is a way to pass data through the component tree without having to pass props down manually at every level.', sender: 'robot', id: crypto.randomUUID() }
+            ]);
 
             return (
-                <>
+                <div>
                     <h1>Midenga's Chatbot</h1>
-                    <ChatInput />
-                    <ChatMessages/>
-                   
-                </>
+                    <ChatMessages chatMessages={chatMessages} />
+                    <ChatInput
+                        chatMessages={chatMessages}
+                        setChatMessages={setChatMessages}
+                    />
+                </div>
             );
         }
 
@@ -107,5 +146,4 @@
         ReactDOM.createRoot(container).render(<App />);
     </script>
 </body>
-
 </html>
